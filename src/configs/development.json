@@ -1,0 +1,19 @@
+{
+    "env": "development",
+    "dbConfig": {
+        "host": "localhost",
+        "port": 5432,
+        "user": "kipackjeong",
+        "password": "kipackjeong",
+        "database": "typeexpress-demo"
+    },
+    "secretKey": "secretKey",
+    "log": {
+        "format": "dev",
+        "dir": "../logs"
+    },
+    "cors": {
+        "origin": true,
+        "credentials": true
+    }
+}
