@@ -8,10 +8,7 @@ export class ItemEntity implements Item {
   id: string;
 
   @Column()
-  title: string;
-
-  @Column({ nullable: true })
-  description: string;
+  task: string;
 
   @Column({ default: new Date(Date.now()) })
   createdAt: Date;

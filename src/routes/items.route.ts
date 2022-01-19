@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { CreateUserDto } from '@dtos/users.dto';
 import { IRoutes } from '@interfaces/routes.interface';
-import validationMiddleware from '@middlewares/validation.middleware';
 import ItemsController from '@controllers/items.controller';
+import itemResultMiddleware from '@/middlewares/item-result.middleware';
 
 class ItemsRoute implements IRoutes {
   public path = '/items';
   public router = Router();
-  public itemsController;
+  public itemsController: ItemsController;
 
   constructor() {
     this.itemsController = new ItemsController();
@@ -17,8 +16,8 @@ class ItemsRoute implements IRoutes {
   private initializeRoutes() {
     const { getAllItems, getItemById, createItem, updateItem, deleteItem } = this.itemsController;
 
-    this.router.route(`${this.path}`).get(getAllItems).post(validationMiddleware(CreateUserDto, 'body'), createItem);
-    this.router.route(`${this.path}/:id`).get(getItemById).put(validationMiddleware(CreateUserDto, 'body', true), updateItem).delete(deleteItem);
+    this.router.route(`${this.path}`).get(getAllItems).post(createItem);
+    this.router.route(`${this.path}/:id`).get(getItemById).put(updateItem).delete(deleteItem);
   }
 }
 

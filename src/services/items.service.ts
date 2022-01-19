@@ -5,19 +5,32 @@ import ItemsRepository from '@/repositories/items.repository';
 import { EntityNotFoundError, getConnection } from 'typeorm';
 import { ItemEntity } from '@entities/items.entity';
 import { HttpException } from '../exceptions/HttpException';
+import { ReadItemDto } from '@/dtos/items.dto';
+import { mapToReadDto } from '@/utils/mapper';
 
 class ItemsService implements CommonService<Item> {
   private _repository: ItemsRepository = getConnection().getRepository('items');
 
-  findAll = async (): Promise<Item[]> => {
-    return await this._repository.find();
+  findAll = async (): Promise<ReadItemDto[]> => {
+    const foundItems = await this._repository.find();
+    // mapped items
+    const readItemDtos: ReadItemDto[] = [];
+
+    for (const foundItem of foundItems) {
+      const readItemDto = await mapToReadDto(ReadItemDto, foundItem);
+      readItemDtos.push(readItemDto);
+    }
+
+    return readItemDtos;
   };
-  async findById(id: string): Promise<Item> {
+  async findById(id: string): Promise<ReadItemDto> {
     const itemFound = await this._repository.findOne({ id });
     if (!itemFound) {
       throw new HttpException(404, `Item of id: ${id} not found.`);
     }
-    return itemFound;
+    const readItemDto: ReadItemDto = await mapToReadDto(ReadItemDto, itemFound);
+
+    return readItemDto;
   }
   async create(item: Item): Promise<string> {
     const createdItem = await this._repository.save(item);
