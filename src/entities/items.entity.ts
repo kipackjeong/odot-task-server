@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Priority } from '@/enums/item.enum';
 import Item from '@interfaces/items.interface';
 
@@ -10,13 +10,13 @@ export class ItemEntity implements Item {
   @Column()
   task: string;
 
-  @Column({ default: new Date(Date.now()) })
+  @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;
+  modifiedAt!: Date;
 
-  @Column({ default: new Date(Date.now() + 1) })
+  @Column({ default: new Date(Date.now()) })
   dueDate: Date;
 
   @Column({ enum: [Priority.HIGH, Priority.MEDIUM, Priority.LOW], default: Priority.MEDIUM })

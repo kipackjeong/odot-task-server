@@ -3,7 +3,6 @@ import Item from '@interfaces/items.interface';
 import ItemsService from '@services/items.service';
 import { asyncHandler } from '@/handlers/async.handler';
 import { ReadItemDto } from '@dtos/items.dto';
-import { mapToReadDto } from '@/utils/mapper';
 class ItemsController {
   private _itemsService = new ItemsService();
 
@@ -14,7 +13,7 @@ class ItemsController {
 
   public getItemById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
-    const item: readItemDto = await this._itemsService.findById(id);
+    const item: ReadItemDto = await this._itemsService.findById(id);
 
     res.status(200).json({ data: item, success: true });
   });
@@ -22,9 +21,9 @@ class ItemsController {
   public createItem = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const creatingItem: Item = req.body;
 
-    const createdItemId = await this._itemsService.create(creatingItem);
+    const readItemDto: ReadItemDto = await this._itemsService.create(creatingItem);
 
-    res.status(201).json({ data: createdItemId, success: true });
+    res.status(201).json({ data: readItemDto, success: true });
   });
   public updateItem = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
@@ -36,6 +35,17 @@ class ItemsController {
     const id = req.params.id;
     const result = await this._itemsService.delete(id);
     res.status(200).json(result);
+  });
+
+  public deleteMultipleItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const ids = req.body;
+    const result = await this._itemsService.deleteMultipleItems(ids);
+
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(400).json(result);
+    }
   });
 }
 

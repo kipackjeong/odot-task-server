@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { IRoutes } from '@interfaces/routes.interface';
 import ItemsController from '@controllers/items.controller';
-import itemResultMiddleware from '@/middlewares/item-result.middleware';
 
 class ItemsRoute implements IRoutes {
   public path = '/items';
@@ -14,9 +13,10 @@ class ItemsRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    const { getAllItems, getItemById, createItem, updateItem, deleteItem } = this.itemsController;
+    const { getAllItems, getItemById, createItem, updateItem, deleteItem, deleteMultipleItems } = this.itemsController;
 
-    this.router.route(`${this.path}`).get(getAllItems).post(createItem);
+    this.router.route(`${this.path}`).get(getAllItems).post(createItem).delete(deleteMultipleItems);
+
     this.router.route(`${this.path}/:id`).get(getItemById).put(updateItem).delete(deleteItem);
   }
 }

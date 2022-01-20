@@ -1,8 +1,7 @@
-import debug from 'debug';
 import Item from '@interfaces/items.interface';
 import CommonService from '@interfaces/service.interface';
 import ItemsRepository from '@/repositories/items.repository';
-import { EntityNotFoundError, getConnection } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { ItemEntity } from '@entities/items.entity';
 import { HttpException } from '../exceptions/HttpException';
 import { ReadItemDto } from '@/dtos/items.dto';
@@ -23,6 +22,7 @@ class ItemsService implements CommonService<Item> {
 
     return readItemDtos;
   };
+
   async findById(id: string): Promise<ReadItemDto> {
     const itemFound = await this._repository.findOne({ id });
     if (!itemFound) {
@@ -32,10 +32,14 @@ class ItemsService implements CommonService<Item> {
 
     return readItemDto;
   }
-  async create(item: Item): Promise<string> {
+
+  async create(item: Item): Promise<ReadItemDto> {
     const createdItem = await this._repository.save(item);
-    return createdItem.id;
+    const readItemDto: ReadItemDto = await mapToReadDto(ReadItemDto, createdItem);
+
+    return readItemDto;
   }
+
   async update(id: string, item: Partial<Item>): Promise<Object> {
     const itemFromDB = await this._repository.findOne({ id });
     let success = false;
@@ -49,10 +53,12 @@ class ItemsService implements CommonService<Item> {
     }
     return { success };
   }
+
   async patch(): Promise<Item> {
     return new ItemEntity();
   }
-  async delete(id: string): Promise<Object> {
+
+  delete = async (id: string): Promise<Object> => {
     const result = await this._repository.delete({ id: id });
     let success = false;
     if (result.affected) {
@@ -60,7 +66,15 @@ class ItemsService implements CommonService<Item> {
     }
 
     return { success };
-  }
+  };
+  deleteMultipleItems = async (ids: string[]) => {
+    const result = await this._repository.delete(ids);
+    if (result.affected === ids.length) {
+      return { success: true };
+    }
+
+    return { success: false };
+  };
 }
 
 export default ItemsService;
