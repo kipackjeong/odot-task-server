@@ -1,3 +1,4 @@
+import { ItemEntity } from '@/entities/items.entity';
 import Item from '@interfaces/items.interface';
 import { ReadItemDto } from '../dtos/items.dto';
 const dateToString = (date): string => {

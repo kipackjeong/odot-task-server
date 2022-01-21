@@ -2,11 +2,19 @@ import { Priority } from '@/enums/item.enum';
 import Item from '@interfaces/items.interface';
 import { IsEmpty } from 'class-validator';
 
-export class ReadItemDto {
+export class ReadItemDto implements Item {
   id: string;
   task: string;
+  priority: Priority;
+  done: boolean;
+
   createdAt: string;
   modifiedAt: string;
   dueDate: string;
+}
+
+export class CreateItemDto {
+  task: string;
+  dueDate?: Date;
   priority: Priority;
 }

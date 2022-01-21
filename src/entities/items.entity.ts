@@ -21,4 +21,7 @@ export class ItemEntity implements Item {
 
   @Column({ enum: [Priority.HIGH, Priority.MEDIUM, Priority.LOW], default: Priority.MEDIUM })
   priority: number;
+
+  @Column({ nullable: false, default: false })
+  done: boolean;
 }

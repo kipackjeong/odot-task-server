@@ -2,12 +2,16 @@ import { Request, Response } from 'express';
 import Item from '@interfaces/items.interface';
 import ItemsService from '@services/items.service';
 import { asyncHandler } from '@/handlers/async.handler';
-import { ReadItemDto } from '@dtos/items.dto';
+import { CreateItemDto, ReadItemDto } from '@dtos/items.dto';
 class ItemsController {
   private _itemsService = new ItemsService();
 
+  // GET /?done=true/false
+  // GET /
   public getAllItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const items = await this._itemsService.findAll();
+    const query = req.query;
+    const items = await this._itemsService.findAll(query);
+
     res.status(200).json({ data: items, success: true });
   });
 
@@ -19,15 +23,23 @@ class ItemsController {
   });
 
   public createItem = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const creatingItem: Item = req.body;
+    const creatingItem: CreateItemDto = req.body;
 
     const readItemDto: ReadItemDto = await this._itemsService.create(creatingItem);
 
     res.status(201).json({ data: readItemDto, success: true });
   });
+
   public updateItem = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const result = await this._itemsService.update(id, req.body);
+    res.status(200).json(result);
+  });
+
+  public updateMultipleItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const ids = req.body.data;
+    console.log(ids);
+    const result = await this._itemsService.updateMultipleItems(ids);
     res.status(200).json(result);
   });
 
