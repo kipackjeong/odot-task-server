@@ -6,8 +6,6 @@ import { ItemEntity } from '@entities/items.entity';
 import { HttpException } from '../exceptions/HttpException';
 import { CreateItemDto, ReadItemDto } from '@/dtos/items.dto';
 import { mapToReadDto } from '@/utils/mapper';
-import { Query } from 'typeorm/driver/Query';
-import { stringify } from 'querystring';
 
 class ItemsService implements CommonService<Item> {
   private _repository: ItemsRepository = getConnection().getRepository(ItemEntity);
@@ -21,40 +19,54 @@ class ItemsService implements CommonService<Item> {
       // query exists
       const queryBuilder: SelectQueryBuilder<ItemEntity> = this._repository.createQueryBuilder('items');
 
-      if (query.done !== undefined) {
-        queryBuilder.andWhere({ done: query.done });
+      if (query.completed !== undefined) {
+        console.log(query.completed);
+        queryBuilder.andWhere('items.completed = :completed', { completed: query.completed });
       }
       if (query.priority !== undefined) {
         queryBuilder.andWhere({ priority: query.priority });
       }
+      //sort=
       if (query.sort !== undefined) {
         let sortBy: string = query.sort;
         let sortDir: 'ASC' | 'DESC' = 'DESC';
 
         const length = query.sort.length;
         const lastTwoLetters = sortBy.substring(length - 2, length);
-
+        //sort=createdat
         if (lastTwoLetters === 'at') {
           // capitalize a, to make
           // createdat -> createdAt
           const capitalizedA = lastTwoLetters[0].toUpperCase();
 
           sortBy = sortBy.substring(0, length - 2) + capitalizedA + sortBy.substring(length - 1);
-        } else if (lastTwoLetters == ' 1' || lastTwoLetters == '-1') {
+        }
+        // sort = createdat,-1
+        else if (lastTwoLetters == ' 1' || lastTwoLetters == '-1') {
           const capitalizedA = sortBy.substring(length - 5, length - 4).toUpperCase();
 
           sortBy = sortBy.substring(0, length - 5) + capitalizedA + sortBy.substring(length - 4, length - 3);
-          console.log(sortBy);
 
           sortDir = lastTwoLetters == ' 1' ? 'ASC' : 'DESC';
         }
         queryBuilder.orderBy(`items.${sortBy}`, sortDir);
       }
 
-      // wrap up and get items.
+      // date=2022-01-21
+      if (query.date !== undefined) {
+        const startDate = new Date(query.date);
+        const endDate = new Date(startDate.getTime() + 86400000);
+
+        queryBuilder
+          .andWhere('items.createdAt >= :startDate', {
+            startDate: startDate,
+          })
+          .andWhere('items.createdAt < :endDate', { endDate: endDate });
+      }
+
+      // wrap up and g et items.
       foundItems = await queryBuilder.getMany();
     }
-
     // mapped items
     const readItemDtos: ReadItemDto[] = [];
 
@@ -96,7 +108,7 @@ class ItemsService implements CommonService<Item> {
     return { success };
   }
   updateMultipleItems = async (itemIds: string[]): Promise<void> => {
-    const updateResult = await this._repository.update(itemIds, { done: true });
+    const updateResult = await this._repository.update(itemIds, { completed: true });
 
     // if(updateResult.affected === itemIds.length){
     //   return true;

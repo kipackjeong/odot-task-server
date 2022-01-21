@@ -6,7 +6,7 @@ export class ReadItemDto implements Item {
   id: string;
   task: string;
   priority: Priority;
-  done: boolean;
+  completed: boolean;
 
   createdAt: string;
   modifiedAt: string;

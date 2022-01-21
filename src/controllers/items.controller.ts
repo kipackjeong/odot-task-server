@@ -6,7 +6,7 @@ import { CreateItemDto, ReadItemDto } from '@dtos/items.dto';
 class ItemsController {
   private _itemsService = new ItemsService();
 
-  // GET /?done=true/false
+  // GET /?completed=true/false
   // GET /
   public getAllItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const query = req.query;

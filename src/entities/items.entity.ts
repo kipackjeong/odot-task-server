@@ -16,12 +16,12 @@ export class ItemEntity implements Item {
   @UpdateDateColumn()
   modifiedAt!: Date;
 
-  @Column({ default: new Date(Date.now()) })
+  @Column({ default: new Date(Date.now() + 3600 * 1000 * 24) })
   dueDate: Date;
 
   @Column({ enum: [Priority.HIGH, Priority.MEDIUM, Priority.LOW], default: Priority.MEDIUM })
   priority: number;
 
-  @Column({ nullable: false, default: false })
-  done: boolean;
+  @Column({ default: false })
+  completed: boolean;
 }
