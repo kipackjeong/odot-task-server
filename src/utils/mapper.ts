@@ -15,11 +15,7 @@ export const mapToReadDto: IMapper<ReadItemDto, Item> = async (readItemDtoType: 
   const readItemDto: ReadItemDto = new readItemDtoType();
 
   Object.keys(item).forEach(property => {
-    if (property === 'dueDate' || property === 'createdAt' || property === 'modifiedAt') {
-      readItemDto[property] = item[property].toString().slice(0, -33);
-    } else {
-      readItemDto[property] = item[property];
-    }
+    readItemDto[property] = item[property];
   });
   return readItemDto;
 };

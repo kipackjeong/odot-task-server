@@ -11,7 +11,6 @@ class ItemsController {
   public getAllItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const query = req.query;
     const items = await this._itemsService.findAll(query);
-
     res.status(200).json({ data: items, success: true });
   });
 
@@ -24,7 +23,7 @@ class ItemsController {
 
   public createItem = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const creatingItem: CreateItemDto = req.body;
-
+    console.log(req.body);
     const readItemDto: ReadItemDto = await this._itemsService.create(creatingItem);
 
     res.status(201).json({ data: readItemDto, success: true });
@@ -37,9 +36,8 @@ class ItemsController {
   });
 
   public updateMultipleItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const ids = req.body.data;
-    console.log(ids);
-    const result = await this._itemsService.updateMultipleItems(ids);
+    const toUpdateTodos = req.body.data;
+    const result = await this._itemsService.updateMultipleItems(toUpdateTodos);
     res.status(200).json(result);
   });
 

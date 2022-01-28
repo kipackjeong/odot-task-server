@@ -11,7 +11,7 @@ class ItemsService implements CommonService<Item> {
   private _repository: ItemsRepository = getConnection().getRepository(ItemEntity);
 
   findAll = async (query?: any): Promise<ReadItemDto[]> => {
-    let foundItems: Item[];
+    let foundItems: ReadItemDto[];
     if (!query) {
       // no query
       foundItems = await this._repository.find();
@@ -20,7 +20,6 @@ class ItemsService implements CommonService<Item> {
       const queryBuilder: SelectQueryBuilder<ItemEntity> = this._repository.createQueryBuilder('items');
 
       if (query.completed !== undefined) {
-        console.log(query.completed);
         queryBuilder.andWhere('items.completed = :completed', { completed: query.completed });
       }
       if (query.priority !== undefined) {
@@ -55,6 +54,7 @@ class ItemsService implements CommonService<Item> {
       // date=2022-01-21
       if (query.date !== undefined) {
         const startDate = new Date(query.date);
+        startDate.setHours(0);
         const endDate = new Date(startDate.getTime() + 86400000);
 
         queryBuilder
@@ -67,15 +67,7 @@ class ItemsService implements CommonService<Item> {
       // wrap up and g et items.
       foundItems = await queryBuilder.getMany();
     }
-    // mapped items
-    const readItemDtos: ReadItemDto[] = [];
-
-    for (const foundItem of foundItems) {
-      const readItemDto = await mapToReadDto(ReadItemDto, foundItem);
-      readItemDtos.push(readItemDto);
-    }
-
-    return readItemDtos;
+    return foundItems;
   };
   async findById(id: string): Promise<ReadItemDto> {
     const itemFound = await this._repository.findOne({ id });
@@ -88,9 +80,7 @@ class ItemsService implements CommonService<Item> {
   }
 
   async create(item: CreateItemDto): Promise<ReadItemDto> {
-    const createdItem = await this._repository.save(item);
-    const readItemDto: ReadItemDto = await mapToReadDto(ReadItemDto, createdItem);
-
+    const readItemDto: ReadItemDto = await this._repository.save(item);
     return readItemDto;
   }
 
@@ -107,13 +97,22 @@ class ItemsService implements CommonService<Item> {
     }
     return { success };
   }
-  updateMultipleItems = async (itemIds: string[]): Promise<void> => {
-    const updateResult = await this._repository.update(itemIds, { completed: true });
 
-    // if(updateResult.affected === itemIds.length){
-    //   return true;
-    // }
-    return;
+  updateMultipleItems = async (toUpdateTodos: any[]): Promise<Object> => {
+    let affected = 0;
+    for (const toUpdateTodo of toUpdateTodos) {
+      const result = await this._repository.update(toUpdateTodo.id, toUpdateTodo.option);
+      affected += result.affected;
+    }
+
+    let success: boolean;
+    if (affected === toUpdateTodos.length) {
+      success = true;
+    } else {
+      success = false;
+    }
+
+    return { success, affected: affected };
   };
 
   patch = async (): Promise<Item> => {

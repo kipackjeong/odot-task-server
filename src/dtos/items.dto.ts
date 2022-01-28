@@ -8,9 +8,9 @@ export class ReadItemDto implements Item {
   priority: Priority;
   completed: boolean;
 
-  createdAt: string;
-  modifiedAt: string;
-  dueDate: string;
+  createdAt: Date;
+  modifiedAt: Date;
+  dueDate: Date;
 }
 
 export class CreateItemDto {

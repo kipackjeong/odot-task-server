@@ -16,7 +16,7 @@ export class ItemEntity implements Item {
   @UpdateDateColumn()
   modifiedAt!: Date;
 
-  @Column({ default: new Date(Date.now() + 3600 * 1000 * 24) })
+  @Column({ nullable: true })
   dueDate: Date;
 
   @Column({ enum: [Priority.HIGH, Priority.MEDIUM, Priority.LOW], default: Priority.MEDIUM })
