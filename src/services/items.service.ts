@@ -25,29 +25,15 @@ class ItemsService implements CommonService<Item> {
       if (query.priority !== undefined) {
         queryBuilder.andWhere({ priority: query.priority });
       }
-      //sort=
+      //sort=<field>,ASC | DESC
       if (query.sort !== undefined) {
-        let sortBy: string = query.sort;
-        let sortDir: 'ASC' | 'DESC' = 'DESC';
+        let sortBy: string = query.sort.split(',')[0];
+        const sortDir: 'ASC' | 'DESC' = query.sort.split(',')[1];
 
-        const length = query.sort.length;
-        const lastTwoLetters = sortBy.substring(length - 2, length);
-        //sort=createdat
-        if (lastTwoLetters === 'at') {
-          // capitalize a, to make
-          // createdat -> createdAt
-          const capitalizedA = lastTwoLetters[0].toUpperCase();
-
-          sortBy = sortBy.substring(0, length - 2) + capitalizedA + sortBy.substring(length - 1);
+        if (sortBy === 'createdat') {
+          sortBy = 'createdAt';
         }
-        // sort = createdat,-1
-        else if (lastTwoLetters == ' 1' || lastTwoLetters == '-1') {
-          const capitalizedA = sortBy.substring(length - 5, length - 4).toUpperCase();
 
-          sortBy = sortBy.substring(0, length - 5) + capitalizedA + sortBy.substring(length - 4, length - 3);
-
-          sortDir = lastTwoLetters == ' 1' ? 'ASC' : 'DESC';
-        }
         queryBuilder.orderBy(`items.${sortBy}`, sortDir);
       }
 
