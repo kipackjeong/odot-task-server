@@ -9,6 +9,7 @@ class AuthController {
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      console.log(this);
       const userData: CreateUserDto = req.body;
       const signUpUserData: User = await this.authService.signup(userData);
 
@@ -20,6 +21,7 @@ class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      console.log(this);
       const userData: CreateUserDto = req.body;
       const { cookie, findUser } = await this.authService.login(userData);
 
@@ -32,6 +34,7 @@ class AuthController {
 
   public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
+      console.log(this);
       const userData: User = req.user;
       const logOutUserData: User = await this.authService.logout(userData);
 

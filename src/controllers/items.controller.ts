@@ -3,16 +3,22 @@ import ItemsService from '@services/items.service';
 import { asyncHandler } from '@/handlers/async.handler';
 import { CreateItemDto, ReadItemDto } from '@dtos/items.dto';
 class ItemsController {
-  private _itemsService;
-  constructor() {
-    console.log(this);
-    this._itemsService = new ItemsService();
+  private static instance: ItemsController;
+
+  static getInstance(): ItemsController {
+    if (!ItemsController.instance) {
+      ItemsController.instance = new ItemsController();
+      ItemsController.instance._itemsService = new ItemsService();
+    }
+    return ItemsController.instance;
   }
+
+  private _itemsService;
+
   // GET /?completed=true/false
   // GET /
   public getAllItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const query = req.query;
-    console.log(this);
     const items = await this._itemsService.findAll(query);
     res.status(200).json({ data: items, success: true });
   });

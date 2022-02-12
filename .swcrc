@@ -25,12 +25,10 @@
       "@databases": ["databases"],
       "@dtos/*": ["dtos/*"],
       "@entities/*": ["entities/*"],
-      "@enums/*": ["enums/*"],
       "@exceptions/*": ["exceptions/*"],
       "@interfaces/*": ["interfaces/*"],
       "@middlewares/*": ["middlewares/*"],
       "@routes/*": ["routes/*"],
-      "@repositories/*": ["repositories/*"],
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"]
     }

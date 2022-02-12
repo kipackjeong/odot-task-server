@@ -8,16 +8,23 @@ class ItemsRoute implements IRoutes {
   public itemsController: ItemsController;
 
   constructor() {
-    this.itemsController = new ItemsController();
+    this.itemsController = ItemsController.getInstance();
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    const { getAllItems, getItemById, createItem, updateItem, deleteItem, updateMultipleItems, deleteMultipleItems } = this.itemsController;
+    this.router
+      .route(`${this.path}`)
+      .get(this.itemsController.getAllItems)
+      .post(this.itemsController.createItem)
+      .put(this.itemsController.updateMultipleItems)
+      .delete(this.itemsController.deleteMultipleItems);
 
-    this.router.route(`${this.path}`).get(getAllItems).post(createItem).put(updateMultipleItems).delete(deleteMultipleItems);
-
-    this.router.route(`${this.path}/:id`).get(getItemById).put(updateItem).delete(deleteItem);
+    this.router
+      .route(`${this.path}/:id`)
+      .get(this.itemsController.getItemById)
+      .put(this.itemsController.updateItem)
+      .delete(this.itemsController.deleteItem);
   }
 }
 
