@@ -2,9 +2,10 @@
     "env": "production",
     "dbConfig": {
         "host": "localhost",
-        "user": "root",
-        "password": "password",
-        "database": "test"
+        "port": 5432,
+        "user": "kipackjeong",
+        "password": "kipackjeong",
+        "database": "typeexpress-demo"
     },
     "secretKey": "secretKey",
     "log": {

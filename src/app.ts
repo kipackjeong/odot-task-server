@@ -32,13 +32,19 @@ class App {
     this.env = process.env.NODE_ENV || 'development';
 
     if (this.env !== 'test') {
-      this.connectToDatabase().then(() => {
-        this.routes = [new IndexRoute(), new UsersRoute(), new AuthRoute(), new ItemsRoute()];
-        this.initializeMiddlewares();
-        this.initializeRoutes(this.routes);
-        this.initializeSwagger();
-        this.initializeErrorHandling();
-      });
+      try {
+        this.connectToDatabase().then(() => {
+          this.routes = [new IndexRoute(), new UsersRoute(), new AuthRoute(), new ItemsRoute()];
+          this.initializeMiddlewares();
+          this.initializeRoutes(this.routes);
+          this.initializeSwagger();
+          this.initializeErrorHandling();
+
+          logger.info('Database, Middlewares, Routes, ErrorHandlers, and Swagger integration was successfully established.');
+        });
+      } catch (err: any) {
+        logger.error(err);
+      }
     }
   }
 

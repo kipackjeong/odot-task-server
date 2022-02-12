@@ -4,6 +4,7 @@ import { ConnectionOptions } from 'typeorm';
 import { dbConfig } from '@interfaces/db.interface';
 
 const { host, user, password, database }: dbConfig = config.get('dbConfig');
+console.log(host, user, password);
 export const dbConnection: ConnectionOptions = {
   type: 'postgres',
   host: host,

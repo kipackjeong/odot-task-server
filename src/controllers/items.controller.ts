@@ -1,15 +1,18 @@
 import { Request, Response } from 'express';
-import Item from '@interfaces/items.interface';
 import ItemsService from '@services/items.service';
 import { asyncHandler } from '@/handlers/async.handler';
 import { CreateItemDto, ReadItemDto } from '@dtos/items.dto';
 class ItemsController {
-  private _itemsService = new ItemsService();
-
+  private _itemsService;
+  constructor() {
+    console.log(this);
+    this._itemsService = new ItemsService();
+  }
   // GET /?completed=true/false
   // GET /
   public getAllItems = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const query = req.query;
+    console.log(this);
     const items = await this._itemsService.findAll(query);
     res.status(200).json({ data: items, success: true });
   });

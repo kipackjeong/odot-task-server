@@ -27,12 +27,8 @@ class ItemsService implements CommonService<Item> {
       }
       //sort=<field>,ASC | DESC
       if (query.sort !== undefined) {
-        let sortBy: string = query.sort.split(',')[0];
+        const sortBy: string = query.sort.split(',')[0];
         const sortDir: 'ASC' | 'DESC' = query.sort.split(',')[1];
-
-        if (sortBy === 'createdat') {
-          sortBy = 'createdAt';
-        }
 
         queryBuilder.orderBy(`items.${sortBy}`, sortDir);
       }
@@ -40,6 +36,7 @@ class ItemsService implements CommonService<Item> {
       // date=2022-01-21
       if (query.date !== undefined) {
         const startDate = new Date(query.date);
+
         startDate.setHours(0);
         const endDate = new Date(startDate.getTime() + 86400000);
 
