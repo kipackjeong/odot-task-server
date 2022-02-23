@@ -33,9 +33,9 @@ services:
     image: bitnami/postgresql:11-debian-9
     container_name: pg
     environment:
-      POSTGRESQL_USERNAME: root
-      POSTGRESQL_PASSWORD: password
-      POSTGRESQL_DATABASE: test
+      POSTGRESQL_USERNAME: kipackjeong
+      POSTGRESQL_PASSWORD: A20181004a?
+      POSTGRESQL_DATABASE: odot-task-db
     ports:
       - '5432:5432'
     networks:

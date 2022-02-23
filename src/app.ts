@@ -62,7 +62,11 @@ class App {
   }
 
   private async connectToDatabase() {
-    await createConnection(dbConnection);
+    try {
+      await createConnection(dbConnection);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   private initializeMiddlewares() {

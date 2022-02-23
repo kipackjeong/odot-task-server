@@ -1,11 +1,11 @@
 {
     "env": "development",
     "dbConfig": {
-        "host": "localhost",
+        "host": "kjdev92-odot-task-sqlserver.postgres.database.azure.com",
         "port": 5432,
-        "user": "kipackjeong",
-        "password": "kipackjeong",
-        "database": "typeexpress-demo"
+        "user": "kjdev92",
+        "password": "A20181004a?",
+        "database": "odot-task"
     },
     "secretKey": "secretKey",
     "log": {
